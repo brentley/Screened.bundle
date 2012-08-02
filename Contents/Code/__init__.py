@@ -103,6 +103,9 @@ def Videos(cat_id=None, query=None):
     else:
         videos = JSON.ObjectFromURL(API_PATH + '/videos/?api_key=' + API_KEY + '&sort=-publish_date&format=json')['results']
 
+    if query != None and len(videos) == 0:
+        return ObjectContainer(header = "No videos available", message = "There were no videos found for your search...")
+
     if Prefs['quality'] == 'Auto':
         if 'hd_url' in videos[0]:
             quality = 'hd_url'
