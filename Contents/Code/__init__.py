@@ -1,7 +1,7 @@
 API_PATH = 'http://api.screened.com'
 API_KEY = '5d352805281dc8e8caea956309de585749dd574a'
 
-ART = 'art-default.png'
+ART = 'art-default.jpg'
 ICON = 'icon-default.png'
 
 def ValidatePrefs():
@@ -12,7 +12,7 @@ def ValidatePrefs():
             Dict['api_key'] = response['api_key']
             Dict.Save()
 
-@handler('/video/screened', 'Screened')
+@handler('/video/screened', 'Screened', thumb=ICON, art=ART)
 def MainMenu():
     if 'api_key' in Dict:
         global API_KEY
@@ -48,7 +48,7 @@ def MainMenu():
 
     oc.add(
         DirectoryObject(
-            key='/video/screened/videos',
+            key=Callback(Videos),
             title='Latest',
             summary='Watch the newest stuff.',
             thumb=R(ICON),
@@ -61,7 +61,7 @@ def MainMenu():
     for cat in categories:
         oc.add(
             DirectoryObject(
-                key='/video/screened/videos/?cat_id=' + str(cat['id']),
+                key=Callback(Videos, cat_id=cat['id']),
                 title=cat['name'],
                 summary=cat['deck'],
                 thumb=R(ICON),
@@ -99,7 +99,7 @@ def Videos(cat_id=None, query=None):
     if query:
         videos = JSON.ObjectFromURL(API_PATH + '/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json')['results']
     elif cat_id:
-        videos = JSON.ObjectFromURL(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=' + cat_id + '&sort=-publish_date&format=json')['results']
+        videos = JSON.ObjectFromURL(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=' + str(cat_id) + '&sort=-publish_date&format=json')['results']
     else:
         videos = JSON.ObjectFromURL(API_PATH + '/videos/?api_key=' + API_KEY + '&sort=-publish_date&format=json')['results']
 
