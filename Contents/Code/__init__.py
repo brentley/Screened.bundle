@@ -89,7 +89,6 @@ def MainMenu():
 
     return oc
 
-@route('/video/screened/videos')
 def Videos(cat_id=None, query=None):
     if 'api_key' in Dict:
         global API_KEY
